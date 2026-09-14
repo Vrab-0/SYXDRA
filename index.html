@@ -79,19 +79,30 @@ input { font-family: inherit; }
     border-radius: 0;
 }
 
-
 .bg-image {
     position: fixed;
     top: var(--header-h, 47px);
     left: 50%;
-    transform: translateX(-50%) 
+    transform: translateX(-50%);
     width: 100%;
     max-width: 520px;
-    height: calc(100vh - var(--header-h, 47px));
+    min-height: calc(100vh - var(--header-h, 47px));
+    height: 100%;
     object-fit: cover;
     object-position: 50% 0%;
     z-index: -2;
 }
+
+.app {
+    min-height: 100vh;
+}
+
+.bg-image {
+    height: 100vh;
+}
+
+
+
 
 body {
   background: #000;
