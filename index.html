@@ -446,6 +446,18 @@ function mostrarToast(msg) {
 }
 
 cargarProductos();
+
+function ajustarAlturaHeader() {
+  const announce = document.querySelector('.announce');
+  const navbar = document.querySelector('.navbar');
+  const alto = (announce ? announce.offsetHeight : 0) + (navbar ? navbar.offsetHeight : 0) + 55;
+  document.documentElement.style.setProperty('--header-h', alto + 'px');
+}
+
+window.addEventListener('load', ajustarAlturaHeader);
+window.addEventListener('resize', ajustarAlturaHeader);
+document.querySelector('.announce img')?.addEventListener('load', ajustarAlturaHeader);   
+   
 </script>
 </body>
 </html>
