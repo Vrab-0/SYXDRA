@@ -80,21 +80,18 @@ input { font-family: inherit; }
 }
 
 
-
 .bg-image {
-  position: fixed;
-  top: 100px; /* Si sigue quedando bajo, probá con un valor negativo como -30px o -50px */
-  left: 50%;
-  transform: translateX(-50%);
-
-  width: 100%;
-  max-width: 520px;
-  height: 100vh;
-
-  object-fit: cover;
-  z-index: -2;
+    position: fixed;
+    top: var(--header-h, 47px);
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 520px;
+    height: calc(100vh - var(--header-h, 47px));
+    object-fit: cover;
+    object-position: 50% 30%;
+    z-index: -2;
 }
-
 
 body {
   background: #000;
