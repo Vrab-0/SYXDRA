@@ -82,14 +82,11 @@ input { font-family: inherit; }
 .bg-image {
     position: fixed;
     top: var(--header-h, 47px);
-    left: 50%;
-    transform: translateX(-50%);
+    left: 0;
     width: 100%;
-    max-width: 520px;
-    min-height: calc(100vh - var(--header-h, 47px));
-    height: 100%;
+    height: calc(100vh - var(--header-h, 47px));
     object-fit: cover;
-    object-position: 50% 0%;
+    object-position: center top;
     z-index: -2;
 }
 
