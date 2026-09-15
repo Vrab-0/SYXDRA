@@ -81,12 +81,14 @@ input { font-family: inherit; }
 
 .bg-image {
     position: fixed;
-    inset: 0;
+    top: 100px;
+    left: 50%;
     width: 100%;
-    height: 100vh;
+    height: calc(100vh + 80px);
     height: 100dvh;
     object-fit: cover;
     object-position: center;
+    transform: translateX(-50%);
     z-index: -2;
 }
 
@@ -162,7 +164,15 @@ body {
 
 .hero { padding: 46px 20px 30px; text-align: center; position: relative; overflow: hidden; }
 .hero .glow { position: absolute; top: -80px; left: 50%; transform: translateX(-50%); width: 340px; height: 340px; background: radial-gradient(circle, rgba(139,63,242,0.35), transparent 70%); filter: blur(10px); pointer-events: none; }
-.hero .hero-logo { width: 100%; max-width: 380px; height: auto; margin: 0 auto; display: block; filter: drop-shadow(0 0 26px rgba(168, 85, 247, 0.45)); position: relative; z-index: 1; }
+.hero > img {
+    width: 100%;
+    max-width: 350px;
+    height: auto;
+    margin: 0 auto;
+    display: block;
+    position: relative;
+    z-index: 1;
+}
 .hero .tagline { margin-top: 14px; font-size: 12px; letter-spacing: 3px; text-transform: uppercase; color: var(--text-muted); position: relative; z-index: 1; }
 .hero .cta { margin-top: 24px; display: inline-flex; align-items: center; gap: 8px; padding: 14px 30px; border: 1px solid var(--border-strong); border-radius: var(--radius-sm); font-family: var(--font-display); font-size: 12px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--text); background: linear-gradient(180deg, rgba(139,63,242,0.15), transparent); transition: transform .12s ease, box-shadow .2s ease; position: relative; z-index: 1; }
 .hero .cta:active { transform: scale(0.97); box-shadow: 0 0 24px rgba(168,85,247,0.35); }
@@ -234,7 +244,7 @@ body {
 </head>
 <body>
 
-<img class="bg-image" src="assets/fondo10.jpeg" alt="">
+<img class="bg-image" src="assets/fondo3.jpeg" alt="">
 
 <div class="app">
 
