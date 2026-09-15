@@ -81,16 +81,19 @@ input { font-family: inherit; }
 
 .bg-image {
     position: fixed;
-    top: 100px;
+    top: 0;
     left: 50%;
     width: 100%;
-    height: calc(100vh + 80px);
-    height: 100dvh;
+    height: 100%;
+    min-height: 100vh;
+    min-height: 100dvh;
+    transform: translateX(-50%);
     object-fit: cover;
     object-position: center;
-    transform: translateX(-50%);
     z-index: -2;
+    pointer-events: none;
 }
+
 
 .app {
     min-height: 100vh;
