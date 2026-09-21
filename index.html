@@ -368,6 +368,79 @@ body {
   z-index: 10;
 }
 
+   .detalle-galeria {
+  position: relative;
+  width: 100%;
+}
+
+.detalle-galeria .img-wrap {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  touch-action: pan-y;
+}
+
+.detalle-galeria .img-wrap img {
+  display: block;
+  width: 100%;
+  max-height: 420px;
+  object-fit: contain;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.galeria-flecha {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 38px;
+  height: 38px;
+  border: 1px solid rgba(170, 100, 255, 0.7);
+  border-radius: 50%;
+  background: rgba(8, 5, 14, 0.75);
+  color: #fff;
+  font-size: 25px;
+  line-height: 1;
+  cursor: pointer;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.galeria-flecha:hover {
+  background: rgba(120, 60, 200, 0.35);
+}
+
+.galeria-flecha.izquierda {
+  left: 10px;
+}
+
+.galeria-flecha.derecha {
+  right: 10px;
+}
+
+.galeria-puntos {
+  display: flex;
+  justify-content: center;
+  gap: 7px;
+  margin-top: 12px;
+}
+
+.galeria-punto {
+  width: 7px;
+  height: 7px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.35);
+  cursor: pointer;
+}
+
+.galeria-punto.activo {
+  background: #b56cff;
+  transform: scale(1.25);
+}
    
 </style>
 </head>
@@ -494,6 +567,8 @@ const { createClient } = supabase;
 const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 let TODOS_LOS_PRODUCTOS = [];
+let detalleImagenes = [];
+let detalleImagenActual = 0;
 let categoriaActiva = "todos";
 let textoBusqueda = "";
 
@@ -594,10 +669,93 @@ function abrirDetalleProducto(idProducto) {
   const enStock = p.stock > 0;
   const precioFormateado = Number(p.precio).toLocaleString("es-AR");
 
-  document.getElementById("detalleImg").innerHTML = p.imagen_url
-    ? `<img src="${p.imagen_url}" alt="${escaparHtml(p.nombre)}">`
-    : "";
+  detalleImagenes = Array.isArray(p.imagenes) && p.imagenes.length
+  ? p.imagenes
+  : (p.imagen_url ? [p.imagen_url] : []);
 
+detalleImagenActual = 0;
+
+renderizarImagenesDetalle();
+   function renderizarImagenesDetalle() {
+
+  const contenedor = document.getElementById("detalleImg");
+  const puntos = document.getElementById("detallePuntos");
+
+  if (!detalleImagenes.length) {
+    contenedor.innerHTML = "";
+    puntos.innerHTML = "";
+    return;
+  }
+
+  contenedor.innerHTML = `
+    <img
+      src="${escaparHtml(detalleImagenes[detalleImagenActual])}"
+      alt="Imagen del producto"
+    >
+  `;
+
+  puntos.innerHTML = detalleImagenes.map((_, index) => `
+    <button
+      class="galeria-punto ${index === detalleImagenActual ? "activo" : ""}"
+      data-index="${index}">
+    </button>
+  `).join("");
+
+  puntos.querySelectorAll(".galeria-punto").forEach((punto) => {
+    punto.addEventListener("click", () => {
+      detalleImagenActual = Number(punto.dataset.index);
+      renderizarImagenesDetalle();
+    });
+  });
+}
+   document.getElementById("detalleAnterior").addEventListener("click", () => {
+
+  if (detalleImagenActual > 0) {
+    detalleImagenActual--;
+    renderizarImagenesDetalle();
+  }
+
+});
+
+document.getElementById("detalleSiguiente").addEventListener("click", () => {
+
+  if (detalleImagenActual < detalleImagenes.length - 1) {
+    detalleImagenActual++;
+    renderizarImagenesDetalle();
+  }
+
+});
+const detalleImg = document.getElementById("detalleImg");
+
+let toqueInicioX = 0;
+let toqueFinX = 0;
+
+detalleImg.addEventListener("touchstart", (e) => {
+  toqueInicioX = e.touches[0].clientX;
+});
+
+detalleImg.addEventListener("touchend", (e) => {
+
+  toqueFinX = e.changedTouches[0].clientX;
+
+  const diferencia = toqueInicioX - toqueFinX;
+
+  if (diferencia > 50) {
+    if (detalleImagenActual < detalleImagenes.length - 1) {
+      detalleImagenActual++;
+      renderizarImagenesDetalle();
+    }
+  }
+
+  if (diferencia < -50) {
+    if (detalleImagenActual > 0) {
+      detalleImagenActual--;
+      renderizarImagenesDetalle();
+    }
+  }
+
+});
+   
   document.getElementById("detalleCat").textContent = p.categoria;
 
   document.getElementById("detalleNombre").textContent = p.nombre;
