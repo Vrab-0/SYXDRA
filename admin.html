@@ -259,6 +259,14 @@ input, select { font-family: inherit; }
         </select>
       </div>
       <div class="field">
+      <label for="e-descripcion">Descripción</label>
+      <textarea
+      id="e-descripcion"
+      rows="4"
+      placeholder="Escribí una descripción del producto..."
+      ></textarea>
+      </div>
+      <div class="field">
         <label>Cambiar imagen (opcional)</label>
         <label class="image-drop" id="editImageDrop">
           <div id="editImageDropContent">Tocá para reemplazar la foto</div>
@@ -518,6 +526,7 @@ function abrirModalEdicion(id) {
   document.getElementById("e-precio").value = p.precio;
   document.getElementById("e-stock").value = p.stock;
   document.getElementById("e-categoria").value = p.categoria;
+  document.getElementById("e-descripcion").value = p.descripcion || "";
   document.getElementById("editImageDropContent").innerHTML = p.imagen_url ? `<img src="${p.imagen_url}" alt="">` : `Tocá para reemplazar la foto`;
 
   editModal.classList.add("open");
@@ -542,12 +551,12 @@ document.getElementById("editForm").addEventListener("submit", async (e) => {
 
   const id = document.getElementById("e-id").value;
   const cambios = {
-    nombre: document.getElementById("e-nombre").value.trim(),
-    precio: Number(document.getElementById("e-precio").value),
-    stock: Number(document.getElementById("e-stock").value),
-    categoria: document.getElementById("e-categoria").value,
-  };
-
+  nombre: document.getElementById("e-nombre").value.trim(),
+  precio: Number(document.getElementById("e-precio").value),
+  stock: Number(document.getElementById("e-stock").value),
+  categoria: document.getElementById("e-categoria").value,
+  descripcion: document.getElementById("e-descripcion").value.trim(),
+};
   try {
     if (archivoEdicion) cambios.imagen_url = await subirImagen(archivoEdicion);
 
