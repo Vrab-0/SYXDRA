@@ -524,10 +524,12 @@ function renderizarProductos() {
   grid.innerHTML = productos.map((p) => tarjetaProducto(p)).join("");
 
  grid.querySelectorAll(".product-card").forEach((card) => {
-    card.addEventListener("click", () => abrirDetalleProducto(card.dataset.id));
+  card.addEventListener("click", () => {
+    abrirDetalleProducto(card.dataset.id);
   });
-};
+ });
 }
+
    
 function tarjetaProducto(p) {
   const enStock = p.stock > 0;
