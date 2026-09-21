@@ -619,8 +619,33 @@ document.getElementById("cerrarDetalle").addEventListener("click", () => {
   detalleModal.classList.remove("open");
 });
 
-document.getElementById("btnConsultarIG").addEventListener("click", () => {
-  window.open(`https://ig.me/m/${IG_USERNAME}`, "_blank");
+document.getElementById("btnConsultarIG").addEventListener("click", async () => {
+  const p = TODOS_LOS_PRODUCTOS.find(prod => prod.id === productoActivoId);
+
+  if (!p) return;
+
+  const precioFormateado = Number(p.precio).toLocaleString("es-AR");
+  const disponibilidad = p.stock > 0
+    ? `${p.stock} unidades disponibles`
+    : "Sin stock";
+
+  const mensaje =
+`Hola! 👋 Quería consultar por este producto:
+
+${p.nombre}
+Categoría: ${p.categoria}
+Precio: $${precioFormateado}
+Disponibilidad: ${disponibilidad}`;
+
+  try {
+    await navigator.clipboard.writeText(mensaje);
+
+    window.open(`https://ig.me/m/${IG_USERNAME}`, "_blank");
+
+  } catch (error) {
+    alert("No se pudo copiar el mensaje. Podés copiarlo manualmente.");
+    window.open(`https://ig.me/m/${IG_USERNAME}`, "_blank");
+  }
 });
 
 document.getElementById("categoryChips").addEventListener("click", (e) => {
