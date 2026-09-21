@@ -390,6 +390,7 @@ document.getElementById("productForm").addEventListener("submit", async (e) => {
   const precio = Number(document.getElementById("p-precio").value);
   const stock = Number(document.getElementById("p-stock").value);
   const categoria = document.getElementById("p-categoria").value;
+  const descripcion = document.getElementById("p-descripcion").value.trim();
 
   if (!nombre || precio < 0 || stock < 0) {
     errorEl.textContent = "Completá todos los campos correctamente.";
@@ -403,7 +404,14 @@ document.getElementById("productForm").addEventListener("submit", async (e) => {
     let imagen_url = null;
     if (archivoNuevo) imagen_url = await subirImagen(archivoNuevo);
 
-    const { error } = await sb.from(TABLE_NAME).insert([{ nombre, precio, categoria, stock, imagen_url }]);
+    const { error } = await sb.from(TABLE_NAME).insert([{
+  nombre,
+  precio,
+  categoria,
+  stock,
+  descripcion,
+  imagen_url
+}]);
     if (error) throw error;
 
     mostrarToast("Producto agregado ✦");
