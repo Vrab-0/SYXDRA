@@ -528,7 +528,8 @@ function renderizarProductos() {
     abrirDetalleProducto(card.dataset.id);
   });
 });
-
+}
+   
 function tarjetaProducto(p) {
   const enStock = p.stock > 0;
   const precioFormateado = Number(p.precio).toLocaleString("es-AR");
