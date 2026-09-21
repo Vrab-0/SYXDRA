@@ -206,7 +206,7 @@ input, select { font-family: inherit; }
                 <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M12 16V4M12 4L7 9M12 4L17 9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
                 Tocá para elegir una foto
               </div>
-              <input type="file" id="p-imagen" accept="image/*">
+              <input type="file" id="p-imagen" accept="image/*" multiple>
             </label>
           </div>
           <p class="error-msg" id="formError"></p>
@@ -311,7 +311,7 @@ const { createClient } = supabase;
 const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 let PRODUCTOS_ADMIN = [];
-let archivoNuevo = null;
+let archivoNuevo = [];
 let archivoEdicion = null;
 let idAEliminar = null;
 
@@ -369,15 +369,44 @@ document.querySelectorAll(".tab-btn").forEach((btn) => {
 });
 
 /* ---------- AGREGAR PRODUCTO ---------- */
+
 document.getElementById("p-imagen").addEventListener("change", (e) => {
-  const file = e.target.files[0];
-  if (!file) return;
-  archivoNuevo = file;
-  const reader = new FileReader();
-  reader.onload = (ev) => {
-    document.getElementById("imageDropContent").innerHTML = `<img src="${ev.target.result}" alt="preview">`;
-  };
-  reader.readAsDataURL(file);
+
+  const files = Array.from(e.target.files);
+
+  if (!files.length) return;
+
+  archivosNuevos = files;
+
+  const contenedor = document.getElementById("imageDropContent");
+
+  contenedor.innerHTML = "";
+
+  files.forEach((file) => {
+
+    const reader = new FileReader();
+
+    reader.onload = (ev) => {
+
+      const img = document.createElement("img");
+
+      img.src = ev.target.result;
+      img.alt = "preview";
+
+      img.style.width = "90px";
+      img.style.height = "90px";
+      img.style.objectFit = "cover";
+      img.style.borderRadius = "10px";
+      img.style.margin = "5px";
+
+      contenedor.appendChild(img);
+
+    };
+
+    reader.readAsDataURL(file);
+
+  });
+
 });
 
 document.getElementById("productForm").addEventListener("submit", async (e) => {
@@ -399,25 +428,34 @@ document.getElementById("productForm").addEventListener("submit", async (e) => {
 
   btn.disabled = true;
   btn.innerHTML = `<div class="loader"></div>`;
+try {
+  const imagenes = [];
 
-  try {
-    let imagen_url = null;
-    if (archivoNuevo) imagen_url = await subirImagen(archivoNuevo);
+  for (const archivo of archivosNuevos) {
+    const url = await subirImagen(archivo);
 
-    const { error } = await sb.from(TABLE_NAME).insert([{
-  nombre,
-  precio,
-  categoria,
-  stock,
-  descripcion,
-  imagen_url
-}]);
+    if (url) {
+      imagenes.push(url);
+    }
+  }
+
+  const imagen_url = imagenes[0] || null;
+
+  const { error } = await sb.from(TABLE_NAME).insert([{
+    nombre,
+    precio,
+    categoria,
+    stock,
+    descripcion,
+    imagen_url,
+    imagenes
+  }]);
     if (error) throw error;
 
     mostrarToast("Producto agregado ✦");
     document.getElementById("productForm").reset();
     document.getElementById("imageDropContent").innerHTML = `Tocá para elegir una foto`;
-    archivoNuevo = null;
+    archivoNuevo = [];
     cargarProductosAdmin();
   } catch (err) {
     console.error(err);
